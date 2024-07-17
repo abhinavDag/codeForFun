@@ -1,5 +1,6 @@
 #include <bits/stdc++.h>
 using namespace std;
+
 /* DOCUMENTATION
 In this code, I want to actually not write the enigma function in main(), rather, I want to make a function called
 enigma which calls some other functions like rotorOne, rotorTwo, rotorThree, reflector, plugboard etc
@@ -49,41 +50,32 @@ vector <vector <char>> rotorMaps{map1,map2,map3,map4,map5,map1rev,map2rev,map3re
 
 vector <char> turnOverPoint {'r','f','w','k','a'};
 
-
 //CONSTANTS--
 
 int main()
 {
-	cout << enigma(3,2,1,'a','d','p','a','a','a',false,'b',"xuwjp") << endl;
+	cout << enigma(3,2,1,'a','d','p','a','a','a',false,'b',"abhinavdaggubelli0sravanipriya") << endl;
 	return 0;
 }
 
 //FUNCTION DEFINITIONS
-
-
 
 //rotor()
 char rotor(int rotorNumber,char input,char currentPosition, char ringSetting)
 {
 	char output {};
 	//creates vector called "mapping"
-	vector <char> mapping{};
-	for(unsigned i {}; i < rotorMaps[rotorNumber - 1].size() ; i++ )
-	{
-		mapping.push_back(rotorMaps[rotorNumber -1 ][i]);
-	}
+	vector <char> mapping {rotorMaps[rotorNumber -1]};
 
 	//defines increment variable
 	int increment { index(currentPosition,alphabet) - index(ringSetting,alphabet) };
 	
 	//these pieces of code will determine index of output alphabet and store in "goesToAlphabet"
 	int goesToMapping {index(input,alphabet) + increment};
-	if(goesToMapping > 25){goesToMapping -= 26;}
-	else if(goesToMapping < 0){goesToMapping += 26;}
+	goesToMapping = circularIndex(goesToMapping);
 	
 	int goesToAlphabet {index(mapping[goesToMapping],alphabet) - increment};
-	if(goesToAlphabet > 25){goesToAlphabet -= 26;}
-	else if(goesToAlphabet < 0){goesToAlphabet += 26;}
+	goesToAlphabet = circularIndex(goesToAlphabet);
 	
 	output = alphabet[goesToAlphabet];
 	return output;
@@ -95,22 +87,14 @@ char rotor(int rotorNumber,char input,char currentPosition, char ringSetting)
 //reflector
 char reflector(char type,char input) 
 {
+	// 'i' determines which map to use
 	unsigned i {};
 	if(type == 'b'){ i=0; }
 	if(type == 'c'){ i=1; }
 	
-	vector <char> base {'a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z'};	
-	
-	vector <char> reflect {};
-	for(unsigned j {}; j < reflectorMaps[i].size(); j++)
-	{
-		reflect.push_back(reflectorMaps[i][j]);
-	}
-	
-	char output {};
-        output = reflect[index(input,base)];
+	char output {};    
+	output = reflectorMaps[i][index(input,alphabet)];
 	return output;
-
 }
 //reflector--
 
@@ -154,8 +138,10 @@ string enigma ( int firstRotor,int secondRotor,int thirdRotor,
 		char inputChar { (plainText[plainIndex]) };
 		inputChar = tolower(inputChar);
 
+		// the below if condition is there to exclude non-alphabetical characters(if entered) from going into encryption process
 		if(index(inputChar,alphabet) != 9999)	
 		{
+			// rotation part of enigma
 			thirdPos=rotation(thirdPos);
 			if( thirdPos == turnOverPoint[thirdRotor-1] or doubleStep )
 			{
@@ -170,6 +156,7 @@ string enigma ( int firstRotor,int secondRotor,int thirdRotor,
 			
 			char outputChar {inputChar};
 			
+			// encryption part of enigma
 			if(plugBoard){ outputChar = plugboard(outputChar); }
 			
 			outputChar = rotor(thirdRotor,  outputChar, thirdPos,  thirdRS);
@@ -232,7 +219,5 @@ int circularIndex(int input)
 	return output;
 }
 //circularIndex--
-
-
 
 //FUNCTION DEFINITIONS--
