@@ -7,8 +7,8 @@ int randomNum(int lowerLimit,int upperLimit);
 //FUNCTION PROTOTYPES--
 
 //CONSTANTS
-const int numberOfGames {100000000};
-const int numberOfDoors {10};
+const int numberOfGames {1000000};
+const int numberOfDoors {3};
 const int switchDoor {0};
 //CONSTANTS--
 
